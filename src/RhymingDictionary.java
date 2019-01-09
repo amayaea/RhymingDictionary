@@ -41,7 +41,8 @@ public class RhymingDictionary {
                             .substring(0,29).equals("https://www.rhymedb.com/word/"))
                 words.add(link.attr("abs:href"));
         }
-        return words;
+        Set<String> sorted_words = new TreeSet<String>(words);
+        return sorted_words;
     }
 
     /**
