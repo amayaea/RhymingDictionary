@@ -11,19 +11,15 @@ import org.jsoup.select.Elements;
  */
 public class RhymingDictionary {
     public static void main (String [] args) throws IOException{
-
         String word = getWord();
-
         Set<String> words = getRhymes(word);
-
-        print("\nWords: (%d)", words.size());
-
-        for (Iterator<String> it = words.iterator(); it.hasNext(); ) {
-            String f = it.next();
-            System.out.println(f.substring(29));
-        }
+        printWords(words);
     }
 
+    /**
+     * Prompts the user to enter a word and will return the address to the rhyming
+     * database of that word
+     */
     private static String getWord(){
         Scanner console = new Scanner(System.in);
         System.out.print("Enter Word: ");
@@ -31,6 +27,9 @@ public class RhymingDictionary {
         return "https://www.rhymedb.com/word/" + word;
     }
 
+    /**
+     * Gets the rhyming words from the rhyming database
+     */
     private static Set<String> getRhymes(String website) throws IOException{
         Document doc = Jsoup.connect(website).get();
         Elements links = doc.select("a[href]");
@@ -45,6 +44,21 @@ public class RhymingDictionary {
         return words;
     }
 
+    /**
+     * Prints the rhyming words that have been retrieved from the rhyming database
+     */
+    private static void printWords(Set<String> words){
+        print("\nRhyming Words: (%d)", words.size());
+
+        for (Iterator<String> it = words.iterator(); it.hasNext(); ) {
+            String f = it.next();
+            System.out.println(f.substring(29));
+        }
+    }
+
+    /**
+     * A helper formatting print function
+     */
     private static void print(String msg, Object... args) {
         System.out.println(String.format(msg, args));
     }
