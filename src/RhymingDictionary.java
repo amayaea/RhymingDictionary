@@ -10,58 +10,71 @@ import org.jsoup.select.Elements;
  * This is a rhyming dictionary
  */
 public class RhymingDictionary {
-    public static void main (String [] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         String word = getWord();
-        Set<String> words = getRhymes(word);
-        printWords(words);
+        String sorting = getSorting();
+        ArrayList<String> words = getRhymes(word);
+        printWords(words, sorting);
     }
 
     /**
      * Prompts the user to enter a word and will return the address to the rhyming
      * database of that word
      */
-    private static String getWord(){
+    private static String getWord() {
         Scanner console = new Scanner(System.in);
-        System.out.print("Enter Word: ");
+        System.out.println("Enter Word: ");
         String word = console.next();
         return "https://www.rhymedb.com/word/" + word;
     }
 
+    private static String getSorting(){
+        Scanner console = new Scanner(System.in);
+        System.out.println("How would you like the words to be sorted?");
+        System.out.println("Alphabetically or by syllable count? (A|S):");
+        String sort = console.next();
+        while (!(sort.equals("A") || sort.equals("S"))) {
+            System.out.println("Please select A or S");
+            sort = console.next();
+        }
+        return sort;
+    }
+
+
     /**
-     * Gets the rhyming words from the rhyming database
+     * Gets the rhyming words from the rhyming database and sorts them alphabetically
      */
-    private static Set<String> getRhymes(String website) throws IOException{
+    private static ArrayList<String> getRhymes(String website) throws IOException {
         Document doc = Jsoup.connect(website).get();
         Elements links = doc.select("a[href]");
 
-        Set<String> words = new HashSet<String>();
+        ArrayList<String> words = new ArrayList<>();
         for (Element link : links) {
-            if(link.attr("abs:href").length() > 29 &&
-                    link.attr("abs:href")
-                            .substring(0,29).equals("https://www.rhymedb.com/word/"))
-                words.add(link.attr("abs:href"));
+            String test = link.text();
+            if (!(test.equals("Definition") || test.equals("Rhymes") || test.contains(".")
+                    || test.length() == 1))
+                words.add(test);
         }
-        Set<String> sorted_words = new TreeSet<String>(words);
-        return sorted_words;
+
+        return words;
     }
 
     /**
      * Prints the rhyming words that have been retrieved from the rhyming database
+     * Also sorts the words appropriately
      */
-    private static void printWords(Set<String> words){
-        print("\nRhyming Words: (%d)", words.size());
+    private static void printWords(ArrayList<String> words, String sorting) {
+        System.out.println("\nRhyming Words: " + words.size());
+        Iterator<String> it = words.iterator();
 
-        for (Iterator<String> it = words.iterator(); it.hasNext(); ) {
+        if (sorting.equals("A")){
+            Set<String> alpha = new TreeSet<>(words);
+            it = alpha.iterator();
+        }
+
+        while (it.hasNext()) {
             String f = it.next();
-            System.out.println(f.substring(29));
+            System.out.println(f);
         }
     }
-
-    /**
-     * A helper formatting print function
-     */
-    private static void print(String msg, Object... args) {
-        System.out.println(String.format(msg, args));
-    }
-
 }
