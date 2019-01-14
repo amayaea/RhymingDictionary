@@ -32,7 +32,7 @@ public class RhymingDictionary {
         Scanner console = new Scanner(System.in);
         System.out.println("How would you like the words to be sorted?");
         System.out.println("Alphabetically or by syllable count? (A|S):");
-        String sort = console.next();
+        String sort = console.next().toUpperCase();
         while (!(sort.equals("A") || sort.equals("S"))) {
             System.out.println("Please select A or S");
             sort = console.next();
@@ -64,7 +64,8 @@ public class RhymingDictionary {
      * Also sorts the words appropriately
      */
     private static void printWords(ArrayList<String> words, String sorting) {
-        System.out.println("\nRhyming Words: " + words.size());
+        int numWords = words.size() - 1;
+        System.out.println("\nRhyming Words: " + numWords);
         Iterator<String> it = words.iterator();
 
         if (sorting.equals("A")){
