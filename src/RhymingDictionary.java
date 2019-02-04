@@ -10,12 +10,17 @@ import org.jsoup.select.Elements;
  * This is a rhyming dictionary
  */
 public class RhymingDictionary {
+
     public static void main(String[] args) throws IOException {
-        String word = getWord();
-        String sorting = getSorting();
-        ArrayList<String> words = getRhymes(word);
-        printWords(words, sorting);
-    }
+        boolean go = true;
+        while (go){
+                String word = getWord();
+                String sorting = getSorting();
+                ArrayList<String> words = getRhymes(word);
+                printWords(words, sorting);
+                go = getNextWord();
+            }
+        }
 
     /**
      * Prompts the user to enter a word
@@ -83,5 +88,21 @@ public class RhymingDictionary {
             String f = it.next();
             System.out.println(f);
         }
+    }
+
+    /**
+     * Will prompt user to search another word or to quit the program
+     * @return A boolean value declaring if the user would like to search another word
+     */
+    private static boolean getNextWord(){
+        Scanner console = new Scanner(System.in);
+        System.out.println("\nWould you like to search another word? (Y|N): ");
+        String answer = console.next().toUpperCase();
+
+        while (!(answer.equals("Y") || answer.equals("N"))) {
+            System.out.println("Please select Y or N");
+            answer = console.next();
+        }
+        return answer.equals("Y");
     }
 }
